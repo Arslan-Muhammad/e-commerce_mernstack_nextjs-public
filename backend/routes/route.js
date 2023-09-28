@@ -35,7 +35,7 @@ router.put('/api/reset-password',resetPassword);
 // @route /api/amin-login
 router.post('/api/admin-login', adminLogin);
 
-// @desc PorductController routes
+// @desc ProductController routes
 router.post("/api/product/create", auth, isAdmin, createProduct);
 router.get("/api/product/all", getAllProducts);
 router.get("/api/product/:id", getProduct);

@@ -4,21 +4,30 @@ const colorController = {
 
     async createColor(req, res, next) {
         try {
-            const { title } = req.body;
+            const { label, value } = req.body;
+            console.log(req.body)
 
-            const alreadyExists = await Color.findOne({ title: title });
-            if (alreadyExists) {
+            const labelAlreadyExists = await Color.exists({ label: label });
+            if (labelAlreadyExists) {
                 const error = {
                     status: 409,
-                    message: `${alreadyExists.title} Color already exists`
+                    message: `Color already exists`
                 }
                 return next(error);
             }
-            const newColor = new Color({ title: title });
+            const valueAlreadyExists = await Color.exists({ value: value });
+            if (valueAlreadyExists) {
+                const error = {
+                    status: 409,
+                    message: `Color already exists`
+                }
+                return next(error);
+            }
+            const newColor = new Color({ label: label, value: value });
 
             const color = await newColor.save();
 
-            return res.status(200).json({ message: `${color.title} new color has been saved` })
+            return res.status(200).json({ message: `${color.label} color has been saved` })
         } catch (error) {
             return next(error);
         }
@@ -64,9 +73,9 @@ const colorController = {
 
     async updateColor(req, res, next) {
         try {
-            const { id, title } = req.body;
+            const { id, label, value } = req.body;
 
-            await Color.findByIdAndUpdate({ _id: id }, { title : title}, { new: true });
+            await Color.findByIdAndUpdate({ _id: id }, { label, value }, { new: true });
 
             res.status(200).send({ message: 'color updated successfully' })
         } catch (error) {

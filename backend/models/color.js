@@ -3,11 +3,13 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const colorSchema = new Schema(
     {
-        title: {
+        label: {
             type: String,
             required: true,
-            trim: true,
-            unique: true
+        },
+        value: {
+            type: String,
+            required: true,
         }
     },
     { timestamps: true }

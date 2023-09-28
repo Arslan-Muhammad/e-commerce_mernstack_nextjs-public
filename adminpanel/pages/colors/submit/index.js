@@ -12,18 +12,19 @@ const index = () => {
 
     const [loading, setLoading] = useState(false);
     const [colors, setColors] = useState('');
+    const [label, setLabel] = useState('');
 
     console.log(colors, 'color--->')
     const handleChangeComplete = (color) => {
         setColors(color.hex);
-      };
-    
+    };
 
     const submitColorHandler = async (e) => {
         e.preventDefault();
         setLoading(true);
         const data = {
-            title: colors
+            label: label,
+            value: colors,
         }
         const res = await createColor(data);
         if (res.status === 200) {
@@ -33,7 +34,8 @@ const index = () => {
             setLoading(false);
             toast.error(res.response.data.message);
             toast.error(res.response.data.error);
-        } else if (res.code === 'ERR_BAD_RESPONSE') {
+        } else if (res.code === 'ERR_BAD_RESPONSE')
+            setLoading(false); {
             toast.error(res.message);
         }
     }
@@ -50,11 +52,29 @@ const index = () => {
                         <div className='w-full'>
 
                             <SketchPicker
-                            color={ colors }
-                            onChangeComplete={handleChangeComplete}
+                                color={colors}
+                                onChangeComplete={handleChangeComplete}
+                            />
+                        </div>
+                        <div className="w-full">
+                            <label
+                                htmlFor="label"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                Color Name
+                            </label>
+                            <input
+                                type="text"
+                                name="label"
+                                value={label}
+                                onChange={(e) => setLabel(e.target.value)}
+                                id="title"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Type product title"
                             />
                         </div>
                     </div>
+
                     {
                         loading ?
                             <button

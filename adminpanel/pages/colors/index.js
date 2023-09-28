@@ -58,11 +58,12 @@ const index = ({ data }) => {
                                         <td className="px-4 py-3">
                                             <div className="flex items-center text-sm">
                                                 <div>
-                                                    <p className="font-semibold">{color.title}</p>
+                                                    <p className="font-semibold">{color.label}</p>
+                                                    <p className="font-semibold">{color.value}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-3 text-sm"><div style={{ backgroundColor: `${color.title}` }} className='h-6 w-6 rounded-xl'></div></td>
+                                        <td className="px-4 py-3 text-sm"><div style={{ backgroundColor: `${color.value}` }} className='h-6 w-6 rounded-xl'></div></td>
                                         <td className="px-4 py-3 text-sm">{color.createdAt}</td>
                                         <td className="px-4 py-3 text-sm">{color.updatedAt}</td>
                                         <td className="px-4 py-3">

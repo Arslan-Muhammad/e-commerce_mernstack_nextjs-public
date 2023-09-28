@@ -4,7 +4,7 @@ import { createProduct, getBrand, getCategory, getColors } from '@/pages/api/api
 import { toast } from 'react-toastify';
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Upload, Select } from 'antd';
+import { Modal, Upload, Select, Tag } from 'antd';
 
 import Link from 'next/link';
 
@@ -31,8 +31,8 @@ const index = ({ data, data1, data2 }) => {
     // colors 
     for (let i = 0; i < allColors.length; i++) {
         options.push({
-            label: allColors[i].title,
-            value: allColors[i].title,
+            label: allColors[i].label,
+            value: allColors[i].value,
         });
     }
 
@@ -105,6 +105,10 @@ const index = ({ data, data1, data2 }) => {
             toast.error(res.response.data.message);
             toast.error(res.response.data.error);
         }
+        else if (res.code === "ERR_BAD_RESPONSE") {
+            setLoading(false);
+            toast.error(res.response.data.message);
+        }
     }
 
     const handleCancel = () => setPreviewOpen(false);
@@ -129,6 +133,28 @@ const index = ({ data, data1, data2 }) => {
             </div>
         </div>
     );
+
+    // change color with options
+    const tagRender = (props) => {
+        const { label, value, closable, onClose } = props;
+        const onPreventMouseDown = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+        return (
+            <Tag
+                color={value}
+                onMouseDown={onPreventMouseDown}
+                closable={closable}
+                onClose={onClose}
+                style={{
+                    marginRight: 3,
+                }}
+            >
+                {label}
+            </Tag>
+        );
+    };
 
     return (
         <section className="bg-white dark:bg-gray-900 sm:ml-64">
@@ -263,6 +289,7 @@ const index = ({ data, data1, data2 }) => {
                                 </label>
                                 <Select
                                     mode="multiple"
+                                    tagRender={tagRender}
                                     allowClear
                                     style={{
                                         width: '100%',

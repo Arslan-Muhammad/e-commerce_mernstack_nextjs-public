@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const { confirm } = Modal;
 
@@ -12,13 +13,32 @@ const index = ({ data }) => {
 
   const router = useRouter();
 
+  // pagination
+  const [currentPageX, setCurrentPageX] = useState(1);
+  const recordsPerPage = 5;
+  const lastIndex = currentPageX * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = allProducts.slice(firstIndex, lastIndex)
+  const npages = Math.ceil(allProducts.length / recordsPerPage);
+  const numbers = [...Array(npages + 1).keys()].slice(1);
 
-  const deleteProductHandler = async (id) => {
-    const res = await deleteProduct(id);
-    if (res.status === 200) {
-      toast.success(res.data.message);
+  const prePage = () => {
+    if (currentPageX !== firstIndex) {
+      setCurrentPageX(currentPageX - 1)
     }
   }
+
+  const nextPage = () => {
+    if (currentPageX !== lastIndex) {
+      setCurrentPageX(currentPageX + 1)
+    }
+  }
+
+  const changePage = async (id) => {
+    setCurrentPageX(id)
+  }
+
+  // delete products model
   const showDeleteConfirm = (id) => {
     confirm({
       title: 'Are you sure delete this Product?',
@@ -36,9 +56,230 @@ const index = ({ data }) => {
     });
   };
 
+  const deleteProductHandler = async (id) => {
+    const res = await deleteProduct(id);
+    if (res.status === 200) {
+      toast.success(res.data.message);
+    }
+  }
+
 
   return (
     <main className='p-4 sm:ml-64'>
+      {/* Filter, Search, Sort */}
+      <section>
+        {/* Start coding here */}
+        <div className="relative bg-white shadow-sm mb-4 dark:bg-gray-800 sm:rounded-lg">
+          <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+            <div className="w-full md:w-1/2">
+              <form className="flex items-center">
+                <label htmlFor="simple-search" className="sr-only">
+                  Search
+                </label>
+                <div className="relative w-full">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    name='search'
+                    className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Search..."
+                  />
+                </div>
+              </form>
+            </div>
+            <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+              <button
+                type="button"
+                className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+              >
+                <svg
+                  className="h-3.5 w-3.5 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    clipRule="evenodd"
+                    fillRule="evenodd"
+                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                  />
+                </svg>
+                Add product
+              </button>
+              <div className="flex items-center w-full space-x-3 md:w-auto">
+                <button
+                  id="actionsDropdownButton"
+                  data-dropdown-toggle="actionsDropdown"
+                  className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                  type="button"
+                >
+                  <svg
+                    className="-ml-1 mr-1.5 w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    />
+                  </svg>
+                  Actions
+                </button>
+                <div
+                  id="actionsDropdown"
+                  className="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+                >
+                  <ul
+                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="actionsDropdownButton"
+                  >
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Mass Edit
+                      </a>
+                    </li>
+                  </ul>
+                  <div className="py-1">
+                    <a
+                      href="#"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Delete all
+                    </a>
+                  </div>
+                </div>
+                <button
+                  id="filterDropdownButton"
+                  data-dropdown-toggle="filterDropdown"
+                  className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                  type="button"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    className="w-4 h-4 mr-2 text-gray-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Filter
+                  <svg
+                    className="-mr-1 ml-1.5 w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    />
+                  </svg>
+                </button>
+                {/* Dropdown menu */}
+                <div
+                  id="filterDropdown"
+                  className="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700"
+                >
+                  <h6 className="mb-3 text-sm font-medium text-gray-900 dark:text-white">
+                    Category
+                  </h6>
+                  <ul
+                    className="space-y-2 text-sm"
+                    aria-labelledby="dropdownDefault"
+                  >
+                    <li className="flex items-center">
+                      <input
+                        id="apple"
+                        type="checkbox"
+                        defaultValue=""
+                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        htmlFor="apple"
+                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                      >
+                        Apple (56)
+                      </label>
+                    </li>
+                    <li className="flex items-center">
+                      <input
+                        id="fitbit"
+                        type="checkbox"
+                        defaultValue=""
+                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        htmlFor="fitbit"
+                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                      >
+                        Fitbit (56)
+                      </label>
+                    </li>
+                    <li className="flex items-center">
+                      <input
+                        id="dell"
+                        type="checkbox"
+                        defaultValue=""
+                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        htmlFor="dell"
+                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                      >
+                        Dell (56)
+                      </label>
+                    </li>
+                    <li className="flex items-center">
+                      <input
+                        id="asus"
+                        type="checkbox"
+                        defaultValue=""
+                        defaultChecked=""
+                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      />
+                      <label
+                        htmlFor="asus"
+                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                      >
+                        Asus (97)
+                      </label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
       <div className="w-full overflow-hidden rounded-lg shadow-xs">
         <div className="w-full overflow-x-auto">
           <table className="w-full whitespace-no-wrap">
@@ -52,7 +293,7 @@ const index = ({ data }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-              {allProducts.map((product) => {
+              {records.map((product) => {
                 return (
                   <tr className="text-gray-700 dark:text-gray-400" key={product._id}>
                     <td className="px-4 py-3">
@@ -88,7 +329,7 @@ const index = ({ data }) => {
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-4 text-sm">
                         <button
-                        onClick={() => router.push(`/products/update/${product._id}`,)}
+                          onClick={() => router.push(`/products/update/${product._id}`,)}
                           className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                           aria-label="Edit"
                         >
@@ -128,7 +369,7 @@ const index = ({ data }) => {
           </table>
         </div>
         <div className="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
-          <span className="flex items-center col-span-3">Showing 1-5 of 100</span>
+          <span className="flex items-center col-span-3">Showing {currentPageX}-{npages} of {npages}</span>
           <span className="col-span-2" />
           {/* Pagination */}
           <span className="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
@@ -136,6 +377,7 @@ const index = ({ data }) => {
               <ul className="inline-flex items-center">
                 <li>
                   <button
+                    onClick={prePage}
                     className="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
                     aria-label="Previous"
                   >
@@ -152,41 +394,23 @@ const index = ({ data }) => {
                     </svg>
                   </button>
                 </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    1
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    2
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    3
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    4
-                  </button>
-                </li>
-                <li>
-                  <span className="px-3 py-1">...</span>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    8
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    9
-                  </button>
-                </li>
+                {
+                  numbers.map((n, i) => {
+                    return (
+                      <li key={i}>
+                        <button
+                          onClick={() => changePage(n)}
+                          className={` ${currentPageX === n ? 'text-white bg-purple-600 border-purple-600 focus:outline-none focus:shadow-outline-purple' : ''} px-3 py-1  transition-colors duration-150  border border-r-0  rounded-md `}>
+                          {n}
+                        </button>
+                      </li>
+                    )
+                  })
+                }
+
                 <li>
                   <button
+                    onClick={nextPage}
                     className="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
                     aria-label="Next"
                   >
@@ -208,22 +432,20 @@ const index = ({ data }) => {
           </span>
         </div>
       </div>
-
     </main>
   )
 }
-
 export default index;
 
 
-export async function getStaticProps() {
 
+export async function getServerSideProps({ query }) {
   const res = await getAllProducts();
   const product = await res.data;
+
   return {
     props: {
       data: product
-    },
-    revalidate: 60
+    }
   }
 }

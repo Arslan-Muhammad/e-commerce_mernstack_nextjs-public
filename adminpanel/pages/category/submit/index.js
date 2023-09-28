@@ -26,7 +26,8 @@ const index = () => {
             setLoading(false);
             toast.error(res.response.data.message);
             toast.error(res.response.data.error);
-        } else if (res.code === 'ERR_BAD_RESPONSE') {
+        } else if (res.code === 'ERR_BAD_RESPONSE')
+            setLoading(false); {
             toast.error(res.message);
         }
     }

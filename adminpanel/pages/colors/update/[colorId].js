@@ -7,9 +7,9 @@ import Link from 'next/link';
 import Loading from '@/components/Loading';
 import { SketchPicker } from 'react-color'
 
-const index = (props) => {
+const index = ({data}) => {
 
-    const myColor = props.data.color;
+    const myColor = data.color;
 
     if (!myColor) {
         return <Loading />
@@ -17,15 +17,17 @@ const index = (props) => {
 
     const [loading, setLoading] = useState(false);
     const [color, setColor] = useState('');
+    const [label, setLabel] = useState('');
 
-    
+
 
     const updateHandler = async (e) => {
         e.preventDefault();
         setLoading(true);
         const data = {
             id: myColor._id,
-            title: color,
+            label: label,
+            value: color,
         }
         const res = await updateColor(data);
         if (res.status === 200) {
@@ -43,7 +45,8 @@ const index = (props) => {
 
     useEffect(() => {
         if (myColor) {
-            setColor(myColor.title);
+            setColor(myColor.value);
+            setLabel(myColor.label);
         }
     }, [])
 
@@ -56,14 +59,29 @@ const index = (props) => {
                 </h2>
                 <form onSubmit={updateHandler}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        <div className='w-full'>
-                        <SketchPicker
-                            color={ color }
-                            onChangeComplete={setColorHandler}
+                        <div className='w-full md:ml-32 ml-14'>
+                            <SketchPicker
+                                color={color}
+                                onChangeComplete={setColorHandler}
                             />
                         </div>
-
-
+                        <div className="w-full">
+                            <label
+                                htmlFor="label"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                Color Name
+                            </label>
+                            <input
+                                type="text"
+                                name="label"
+                                value={label}
+                                onChange={(e) => setLabel(e.target.value)}
+                                id="title"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Type product title"
+                            />
+                        </div>
                     </div>
                     {
                         loading ?

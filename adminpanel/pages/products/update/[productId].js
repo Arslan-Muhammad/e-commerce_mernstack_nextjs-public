@@ -4,7 +4,7 @@ import { getBrand, getCategory, getProduct, updateProduct, getColors } from '@/p
 import { toast } from 'react-toastify';
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Upload, Select } from 'antd';
+import { Modal, Upload, Select, Tag } from 'antd';
 import Link from 'next/link';
 import Loading from '@/components/Loading';
 
@@ -42,8 +42,8 @@ const index = ({ data, data1, data2, data3 }) => {
 
     for (let i = 0; i < allColors.length; i++) {
         colorOptions.push({
-            label: allColors[i].title,
-            value: allColors[i].title,
+            label: allColors[i].label,
+            value: allColors[i].value,
         });
     }
     // categories
@@ -146,6 +146,28 @@ const index = ({ data, data1, data2, data3 }) => {
             setCategory(product.category);
         }
     }, [])
+
+    // change color with options
+    const tagRender = (props) => {
+        const { label, value, closable, onClose } = props;
+        const onPreventMouseDown = (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        };
+        return (
+            <Tag
+                color={value}
+                onMouseDown={onPreventMouseDown}
+                closable={closable}
+                onClose={onClose}
+                style={{
+                    marginRight: 3,
+                }}
+            >
+                {label}
+            </Tag>
+        );
+    };
 
 
     return (
@@ -286,6 +308,7 @@ const index = ({ data, data1, data2, data3 }) => {
                                 <Select
                                     id='colors'
                                     mode="multiple"
+                                    tagRender={tagRender}
                                     size='large'
                                     allowClear
                                     style={{

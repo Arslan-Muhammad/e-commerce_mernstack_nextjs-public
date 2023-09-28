@@ -63,7 +63,7 @@ export const unBlock = async (id) => {
 export const getAllProducts = async () => {
     let response;
     try {
-        response = await api.get('/api/product/all');
+        response = await api.get(`/api/product/all`);
     } catch (error) {
         return error;
     }

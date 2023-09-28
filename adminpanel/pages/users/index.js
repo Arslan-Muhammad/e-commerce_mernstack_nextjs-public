@@ -2,22 +2,45 @@ import { useEffect, useState } from "react";
 import { getAllUsersInfo, unBlock, block } from "../api/api";
 import { toast } from "react-toastify";
 import Loading from "@/components/Loading";
+import axios from "axios";
 
 const index = () => {
 
     const [data, setData] = useState([]);
     const [reload, setReload] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const [pagination, setPagination] = useState("");;
+    console.log(pagination);
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = pagination.limit;
+    const lastIndex = currentPage * recordsPerPage;
+    const firstIndex = lastIndex - recordsPerPage;
+    const records = data;
+    const npages = pagination.numberOfPages;
+    let numbers
+    if (npages !== undefined) {
+        numbers = [...Array(npages + 1).keys()].slice(1);
+    }
     
-    useEffect(() => {
-        (async () => {
-            const res = await getAllUsersInfo();
-            if (res.status === 200) {
-                setLoading(true)
-                setData(res.data.user);
-            }
-        })();
-    }, [reload])
+    const prePage = () => {
+        paghandler();
+        if (currentPage !== firstIndex) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+
+    const nextPage = () => {
+        paghandler();
+        if (currentPage !== lastIndex) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+
+    const changePage = async (id) => {
+        paghandler();
+        setCurrentPage(id)
+    }
 
     const blockHandler = async (id) => {
         const res = await block(id);
@@ -33,6 +56,24 @@ const index = () => {
             setReload(!reload);
             toast.success(res.data.message);
         }
+    }
+    useEffect(() => {
+        (async () => {
+            const res = await getAllUsersInfo();
+            if (res.status === 200) {
+                setLoading(true);
+                setPagination(res.data.pagination);
+                setData(res.data.user);
+            }
+        })();
+    }, [reload]);
+
+    const paghandler = async () => {
+        const res = await axios.get(`http://localhost:8000/api/users/all?page=${currentPage}`, {
+            withCredentials: true,
+        });
+        console.log(res);
+        setData(res.data.user);
     }
     return (
         <main className='p-4 sm:ml-64'>
@@ -124,6 +165,7 @@ const index = () => {
                             <ul className="inline-flex items-center">
                                 <li>
                                     <button
+                                        onClick={prePage}
                                         className="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
                                         aria-label="Previous"
                                     >
@@ -140,41 +182,23 @@ const index = () => {
                                         </svg>
                                     </button>
                                 </li>
-                                <li>
-                                    <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple text-white bg-purple-600 border border-r-0 border-purple-600 focus:shadow-outline-purple ">
-                                        1
-                                    </button>
-                                </li>
-                                <li>
-                                    <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                        2
-                                    </button>
-                                </li>
-                                <li>
-                                    <button className="px-3 py-1  transition-colors duration-150 focus:outline-none ">
-                                        3
-                                    </button>
-                                </li>
-                                <li>
-                                    <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                        4
-                                    </button>
-                                </li>
-                                <li>
-                                    <span className="px-3 py-1">...</span>
-                                </li>
-                                <li>
-                                    <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                        8
-                                    </button>
-                                </li>
-                                <li>
-                                    <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                                        9
-                                    </button>
-                                </li>
+                                {
+                                    numbers?.map((n, i) => {
+                                        return (
+                                            <li key={i}>
+                                                <button
+                                                    onClick={() => changePage(n)}
+                                                    className={` ${currentPage === n ? 'text-white bg-purple-600 border-purple-600 focus:outline-none focus:shadow-outline-purple' : ''} px-3 py-1  transition-colors duration-150  border border-r-0  rounded-md `}>
+                                                    {n}
+                                                </button>
+                                            </li>
+                                        )
+                                    })
+                                }
+
                                 <li>
                                     <button
+                                        onClick={nextPage}
                                         className="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
                                         aria-label="Next"
                                     >

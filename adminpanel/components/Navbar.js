@@ -501,10 +501,11 @@ const Navbar = () => {
             {/* Sidebar */}
             <aside
                 id="sidebar-multi-level-sidebar"
-                className="fixed sm:top-16 m-2 left-0 z-40 w-64 h-[88%] transition-transform -translate-x-full sm:translate-x-0"
+                className="fixed top-16 m-2 left-0 z-40 w-64 h-[88%] transition-transform -translate-x-full sm:translate-x-0"
                 aria-label="Sidebar"
             >
-                <div className="h-full px-3 py-4 overflow-y-auto rounded-xl bg-gray-100 dark:bg-gray-800">
+                {/* overflow-y-auto */}
+                <div className="h-full px-3 py-4  rounded-xl bg-gray-100 dark:bg-gray-800">
                     <ul className="space-y-2 font-medium">
                         <li>
                             <Link
@@ -562,7 +563,7 @@ const Navbar = () => {
                             <ul id="dropdown-example" className="hidden py-2 space-y-2">
                                 <li>
                                     <Link
-                                        href="/products"
+                                        href="/products?search="
                                         className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-400 hover:shadow-md dark:text-white dark:hover:bg-gray-700"
                                     >
                                         Products

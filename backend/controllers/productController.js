@@ -66,43 +66,43 @@ const productController = {
             objectStr = objectStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`)
 
             // paginations
-            const page = +req.query.page || 1;
-            const limit = +req.query.limit || 5;
-            const skip = (page - 1) * limit;
+            // const page = +req.query.page || 1;
+            // const limit = +req.query.limit || 5;
+            // const skip = (page - 1) * limit;
             // new 
-            const endIndex = page * limit;
+            // const endIndex = page * limit;
 
-            const documentCount = await Product.countDocuments();
+            // const documentCount = await Product.countDocuments();
 
-            // pagigation results
-            const pagination = {};
-            pagination.currentPage = page;
-            pagination.limit = limit;
-            pagination.numberOfPages = Math.ceil(documentCount / limit); // 0.2 covert to 1
+            // // pagigation results
+            // const pagination = {};
+            // pagination.currentPage = page;
+            // pagination.limit = limit;
+            // pagination.numberOfPages = Math.ceil(documentCount / limit); // 0.2 covert to 1
 
-            // next page 
-            if (endIndex < documentCount) {
-                pagination.nextPage = page + 1;
-            }
-            // previous page
-            if (skip > 0) {
-                pagination.prevPage = page - 1;
-            }
+            // // next page 
+            // if (endIndex < documentCount) {
+            //     pagination.nextPage = page + 1;
+            // }
+            // // previous page
+            // if (skip > 0) {
+            //     pagination.prevPage = page - 1;
+            // }
 
             // if product not found
-            if (req.query.page) {
-                const productCount = await Product.countDocuments();
-                if (skip >= productCount) {
-                    const error = {
-                        status: 404,
-                        message: "Page Not Found",
-                    }
-                    return next(error);
-                }
-            }
+            // if (req.query.page) {
+            //     const productCount = await Product.countDocuments();
+            //     if (skip >= productCount) {
+            //         const error = {
+            //             status: 404,
+            //             message: "Page Not Found",
+            //         }
+            //         return next(error);
+            //     }
+            // }
 
             // Build the Query
-            let mongooseQueries = Product.find(JSON.parse(objectStr)).skip(skip).limit(limit);
+            let mongooseQueries = Product.find(JSON.parse(objectStr)) // .skip(skip).limit(limit);
 
             // sorting after Biuld the Query
             if (req.query.sort) {
@@ -137,7 +137,7 @@ const productController = {
             // Execute the query
             const products = await mongooseQueries;
 
-            res.status(200).json({ result: products.length, pagination, products: products });
+            res.status(200).json({ result: products.length,  products: products }); // pagination,
         } catch (error) {
             return next(error);
         }
