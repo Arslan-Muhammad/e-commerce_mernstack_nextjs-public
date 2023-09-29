@@ -13,12 +13,18 @@ const index = ({ data }) => {
 
   const router = useRouter();
 
+  // search
+  const [searchQuery, setSearchQuery] = useState('');
+  const filteredProducts = allProducts.filter((product) =>
+    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // pagination
   const [currentPageX, setCurrentPageX] = useState(1);
   const recordsPerPage = 5;
   const lastIndex = currentPageX * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = allProducts.slice(firstIndex, lastIndex)
+  const records = filteredProducts.slice(firstIndex, lastIndex)
   const npages = Math.ceil(allProducts.length / recordsPerPage);
   const numbers = [...Array(npages + 1).keys()].slice(1);
 
@@ -64,6 +70,7 @@ const index = ({ data }) => {
   }
 
 
+
   return (
     <main className='p-4 sm:ml-64'>
       {/* Filter, Search, Sort */}
@@ -95,6 +102,7 @@ const index = ({ data }) => {
                   <input
                     type="text"
                     name='search'
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     placeholder="Search..."
                   />
