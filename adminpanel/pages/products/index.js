@@ -16,15 +16,12 @@ const index = ({ data }) => {
 
   // search
   const [searchQuery, setSearchQuery] = useState('');
-  const multipleSearch = allProducts.filter((product) => 
-    Object.keys(product).some((parameter) => 
-    product[parameter].toString().toLowerCase().includes(searchQuery)
+  const multipleSearch = allProducts.filter((product) =>
+    Object.keys(product).some((parameter) =>
+      product[parameter].toString().toLowerCase().includes(searchQuery)
     )
-    )
+  )
 
-    console.log(multipleSearch, 'sea')
-
-    
 
   // pagination
   const [currentPageX, setCurrentPageX] = useState(1);
@@ -84,7 +81,7 @@ const index = ({ data }) => {
         <div className="relative bg-white shadow-sm mb-4 dark:bg-gray-800 sm:rounded-lg">
           <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
             <div className="w-full md:w-1/2">
-              <form className="flex items-center">
+              <div className="flex items-center">
                 <label htmlFor="simple-search" className="sr-only">
                   Search
                 </label>
@@ -112,7 +109,7 @@ const index = ({ data }) => {
                     placeholder="Search..."
                   />
                 </div>
-              </form>
+              </div>
             </div>
             <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
               <Link
@@ -185,7 +182,7 @@ const index = ({ data }) => {
                       <input
                         id="apple"
                         type="checkbox"
-                       
+
                         className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                       />
                       <label
@@ -205,7 +202,7 @@ const index = ({ data }) => {
                         htmlFor="fitbit"
                         className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
                       >
-                       PC
+                        PC
                       </label>
                     </li>
                     <li className="flex items-center">
@@ -252,13 +249,19 @@ const index = ({ data }) => {
               <tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                 <th className="px-4 py-3">Products</th>
                 <th className="px-4 py-3">Amount</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Quantity</th>
+                <th className="px-4 py-3">Category</th>
+                <th className="px-4 py-3">Brand</th>
+                <th className="px-4 py-3">Sold</th>
+                <th className="px-4 py-3">Create Date</th>
                 <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
               {records.map((product) => {
+                const date = product.createdAt;
+                const newDate = date.slice(0, 10);
+                const time = date.slice(11, 19)
                 return (
                   <tr className="text-gray-700 dark:text-gray-400" key={product._id}>
                     <td className="px-4 py-3">
@@ -290,7 +293,10 @@ const index = ({ data }) => {
                         {product.quantity}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm">{product.createdAt}</td>
+                    <td className="px-4 py-3 text-sm">{product.category}</td>
+                    <td className="px-4 py-3 text-sm">{product.brand}</td>
+                    <td className="px-4 py-3 text-sm">{product.sold}</td>
+                    <td className="px-4 py-3 text-sm">{time + " " + newDate}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-4 text-sm">
                         <button
