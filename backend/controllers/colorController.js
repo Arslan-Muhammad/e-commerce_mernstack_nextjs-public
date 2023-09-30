@@ -5,9 +5,10 @@ const colorController = {
     async createColor(req, res, next) {
         try {
             const { label, value } = req.body;
-            console.log(req.body)
+            
+            const upper = label.charAt(0).toUpperCase() + label.substring(1);
 
-            const labelAlreadyExists = await Color.exists({ label: label });
+            const labelAlreadyExists = await Color.exists({ label: upper });
             if (labelAlreadyExists) {
                 const error = {
                     status: 409,
@@ -23,7 +24,7 @@ const colorController = {
                 }
                 return next(error);
             }
-            const newColor = new Color({ label: label, value: value });
+            const newColor = new Color({ label: upper, value: value });
 
             const color = await newColor.save();
 
@@ -35,7 +36,7 @@ const colorController = {
 
     async getColors(req, res, next) {
         try {
-            const allColors = await Color.find({});
+            const allColors = await Color.find({}).sort({$natural:-1})  // show last create color as first color on client
 
             if (!allColors) {
                 const error = {
