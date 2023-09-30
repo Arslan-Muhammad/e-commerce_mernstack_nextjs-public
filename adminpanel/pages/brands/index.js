@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Link from 'next/link';
 
 const { confirm } = Modal;
 
@@ -12,12 +14,44 @@ const index = ({ data }) => {
 
   const router = useRouter();
 
-  const deleteCategoryHandler = async (id) => {
-    const res = await deleteBrand(id);
-    if (res.status === 200) {
-      toast.success(res.data.message);
+  // search with multiple fields
+  const [searchQuery, setSearchQuery] = useState('');
+  const multipleSearch = allbrands.filter((product) =>
+    Object.keys(product).some((parameter) =>
+      product[parameter].toString().toLowerCase().includes(searchQuery)
+    )
+  )
+
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = multipleSearch.slice(firstIndex, lastIndex)
+  const npages = Math.ceil(allbrands.length / recordsPerPage);
+  const numbers = [...Array(npages + 1).keys()].slice(1);
+
+  // for previous pages
+  const prePage = () => {
+    if (currentPage !== firstIndex) {
+      setCurrentPage(currentPage - 1)
     }
   }
+
+  // for next pages
+  const nextPage = () => {
+    if (currentPage !== lastIndex) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  // for changed pages
+  const changePage = async (id) => {
+    setCurrentPage(id)
+  }
+
+
+  // delete confirm model
   const showDeleteConfirm = (id) => {
     confirm({
       title: 'Are you sure delete this brand?',
@@ -27,7 +61,7 @@ const index = ({ data }) => {
       okType: 'danger',
       cancelText: 'No',
       onOk() {
-        deleteCategoryHandler(id);
+        deleteBrandHandler(id);
       },
       onCancel() {
         console.log('Cancel');
@@ -35,9 +69,81 @@ const index = ({ data }) => {
     });
   };
 
+  //refresh Page on Delete Product
+  const refreshData = () => {
+    router.replace(router.asPath);
+  }
+
+  // delete Product Handler
+  const deleteBrandHandler = async (id) => {
+    const res = await deleteBrand(id);
+    if (res.status === 200) {
+      refreshData(); // refresh Page on Delete Brand
+      toast.success(res.data.message);
+    }
+  }
+
+
+
 
   return (
     <main className='p-4 sm:ml-64'>
+      <div className="relative bg-white shadow-sm mb-4 dark:bg-gray-800 sm:rounded-lg">
+        <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+          <div className="w-full md:w-1/2">
+            <div className="flex items-center">
+              <label htmlFor="simple-search" className="sr-only">
+                Search
+              </label>
+              <div className="relative w-full">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  name='search'
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  placeholder="Search..."
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+            <Link
+              href="/brand/submit"
+              className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+            >
+              <svg
+                className="h-3.5 w-3.5 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  clipRule="evenodd"
+                  fillRule="evenodd"
+                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                />
+              </svg>
+              Add Brand
+            </Link>
+          </div>
+        </div>
+      </div>
       <div className="w-full overflow-hidden rounded-lg shadow-xs">
         <div className="w-full overflow-x-auto">
           <table className="w-full whitespace-no-wrap">
@@ -50,7 +156,15 @@ const index = ({ data }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-              {allbrands?.map((brand) => {
+              {records?.map((brand) => {
+                const createdAt = brand.createdAt;
+                const updatedAt = brand.updatedAt;
+
+                const createdAtDate = createdAt.slice(0, 10);
+                const createdAtTime = createdAt.slice(11, 19);
+
+                const updatedAtDate = updatedAt.slice(0, 10);
+                const updatedAtTime = updatedAt.slice(11, 19);
                 return (
                   <tr className="text-gray-700 dark:text-gray-400" key={brand._id}>
                     <td className="px-4 py-3">
@@ -74,8 +188,8 @@ const index = ({ data }) => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm">{brand.createdAt}</td>
-                    <td className="px-4 py-3 text-sm">{brand.updatedAt}</td>
+                    <td className="px-4 py-3 text-sm">{createdAtTime + " " + createdAtDate}</td>
+                    <td className="px-4 py-3 text-sm">{updatedAtTime + " " + updatedAtDate}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-4 text-sm">
                         <button
@@ -127,6 +241,7 @@ const index = ({ data }) => {
               <ul className="inline-flex items-center">
                 <li>
                   <button
+                    onClick={prePage}
                     className="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
                     aria-label="Previous"
                   >
@@ -143,41 +258,23 @@ const index = ({ data }) => {
                     </svg>
                   </button>
                 </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    1
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    2
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    3
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    4
-                  </button>
-                </li>
-                <li>
-                  <span className="px-3 py-1">...</span>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    8
-                  </button>
-                </li>
-                <li>
-                  <button className="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">
-                    9
-                  </button>
-                </li>
+                {
+                  numbers.map((n, i) => {
+                    return (
+                      <li key={i}>
+                        <button
+                          onClick={() => changePage(n)}
+                          className={` ${currentPage === n ? 'text-white bg-purple-600 border-purple-600 focus:outline-none focus:shadow-outline-purple' : ''} px-3 py-1  transition-colors duration-150  border border-r-0  rounded-md `}>
+                          {n}
+                        </button>
+                      </li>
+                    )
+                  })
+                }
+
                 <li>
                   <button
+                    onClick={nextPage}
                     className="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
                     aria-label="Next"
                   >
