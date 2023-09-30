@@ -111,7 +111,7 @@ const authController = {
             if (user.isBlocked === true) {
                 const error = {
                     status: 401,
-                    message: 'user Blocked'
+                    message: 'Access Denied User is Blocked'
                 }
 
                 return next(error);
@@ -155,6 +155,14 @@ const authController = {
             const { email, password } = req.body;
 
             const adminUser = await User.findOne({ email: email });
+            if (adminUser.isBlocked === true) {
+                const error = {
+                    status: 401,
+                    message: 'User is Blocked by Admin'
+                }
+
+                return next(error);
+            }
             if (adminUser.role !== 'admin') {
                 const error = {
                     status: 401,
@@ -260,6 +268,14 @@ const authController = {
             });
 
             const user = await User.findById({ _id: id });
+
+            if (user.isBlocked === true) {
+                const error = {
+                    status: 401,
+                    message: 'User Blocked'
+                }
+                return next(error);
+            }
 
             return res.status(200).json({ user: user, auth: true });
 
