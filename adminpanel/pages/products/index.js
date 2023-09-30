@@ -5,6 +5,7 @@ import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 
 const { confirm } = Modal;
 
@@ -19,7 +20,7 @@ const index = ({ data }) => {
     router.replace(router.asPath);
   }
 
-  // search with multiple fields
+  // search with multiple
   const [searchQuery, setSearchQuery] = useState('');
   const multipleSearch = allProducts.filter((product) =>
     Object.keys(product).some((parameter) =>
@@ -85,6 +86,14 @@ const index = ({ data }) => {
 
   return (
     <main className='p-4 sm:ml-64'>
+
+      <Head>
+        <title>Products</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="author" content="mrzahidfaiz" />
+      </Head>
+
       <section>
         {/* Start coding here */}
         <div className="relative bg-white shadow-sm mb-4 dark:bg-gray-800 sm:rounded-lg">

@@ -6,8 +6,9 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Loading from '@/components/Loading';
 import { SketchPicker } from 'react-color'
+import Head from 'next/head';
 
-const index = ({data}) => {
+const index = ({ data }) => {
 
     const myColor = data.color;
 
@@ -53,6 +54,14 @@ const index = ({data}) => {
 
     return (
         <section className="bg-white dark:bg-gray-900 p-4 sm:ml-64">
+
+            <Head>
+                <title>Update Color</title>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                <meta name="author" content="mrzahidfaiz" />
+            </Head>
+
             <div className="px-4 mx-auto max-w-full">
                 <h2 className="mb-4 text-center text-xl font-bold dark:text-white bg-slate-800 rounded-xl py-1 shadow-md text-white">
                     UPDATE COLOR

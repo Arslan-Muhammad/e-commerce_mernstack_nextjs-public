@@ -5,6 +5,7 @@ import { Modal } from 'antd';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 
 const { confirm } = Modal;
 
@@ -83,11 +84,16 @@ const index = ({ data }) => {
     }
   }
 
-
-
-
   return (
     <main className='p-4 sm:ml-64'>
+
+      <Head>
+        <title>Brands</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="author" content="mrzahidfaiz" />
+      </Head>
+
       <div className="relative bg-white shadow-sm mb-4 dark:bg-gray-800 sm:rounded-lg">
         <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
           <div className="w-full md:w-1/2">

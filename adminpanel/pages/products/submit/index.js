@@ -7,6 +7,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload, Select, Tag } from 'antd';
 
 import Link from 'next/link';
+import Head from 'next/head';
 
 const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -158,6 +159,13 @@ const index = ({ data, data1, data2 }) => {
 
     return (
         <section className="bg-white dark:bg-gray-900 sm:ml-64">
+            
+            <Head>
+                <title>Create Product</title>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                <meta name="author" content="mrzahidfaiz"></meta>
+            </Head>
             <div className="px-4 mx-auto max-w-full">
                 <h2 className="mb-4 text-center text-xl font-bold dark:text-white bg-slate-800 rounded-xl py-1 shadow-md text-white">
                     ADD PRODUCT
