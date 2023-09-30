@@ -317,7 +317,7 @@ const authController = {
 
             sendEmail(data);
 
-            res.status(200).json({  message: 'request for password reset successful' })
+            res.status(200).json({ message: 'request for password reset successful' })
 
         } catch (error) {
             return next(error);
@@ -350,7 +350,7 @@ const authController = {
                 return next(error);
             }
 
-            
+
             console.log(token);
 
             const verifedToken = await resetPassword.findOne({
@@ -499,90 +499,15 @@ const authController = {
     // @access private
     async getAllUsers(req, res, next) {
         try {
-            // filter
-            const queryObject = { ...req.query };
-            const excludeFields = ["page", "limit", "sort", 'fields', 'search'];
-            excludeFields.forEach((field) => delete queryObject[field]);
-
-            // { price: { gt: '20000' } }  // before
-            // { price: { $gt: '20000' } } // convert to this format
-            // filteration by [gte, gt, lt, lte]
-            let objectStr = JSON.stringify(queryObject);
-            objectStr = objectStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`)
-
-            // paginations
-            const page = +req.query.page || 1;
-            const limit = +req.query.limit || 3;
-            const skip = (page - 1) * limit;
-            // new 
-            const endIndex = page * limit;
-
-            const documentCount = await User.countDocuments();
-
-            // pagigation results
-            const pagination = {};
-            pagination.currentPage = page;
-            pagination.limit = limit;
-            pagination.numberOfPages = Math.ceil(documentCount / limit); // 0.2 covert to 1
-
-            // next page 
-            if (endIndex < documentCount) {
-                pagination.nextPage = page + 1;
-            }
-            // previous page
-            if (skip > 0) {
-                pagination.prevPage = page - 1;
-            }
-
-            // if product not found
-            if (req.query.page) {
-                const productCount = await User.countDocuments();
-                if (skip >= productCount) {
-                    const error = {
-                        status: 404,
-                        message: "Page Not Found",
-                    }
-                    return next(error);
+            const users = await User.find({}).sort({ $natural: -1 });
+            if (!users) {
+                const error = {
+                    status: 404,
+                    message: 'User not found'
                 }
+                return next(error);
             }
-
-            // Build the Query
-            let mongooseQueries = User.find(JSON.parse(objectStr)).skip(skip).limit(limit);
-
-            // sorting after Biuld the Query
-            if (req.query.sort) {
-                // console.log(req.query.sort, "sorting"); // price,-title (price have coma (price sold));
-                const querySort = req.query.sort.split(",").join(" ");
-                // console.log(querySort); // price title which is ok now
-                mongooseQueries = mongooseQueries.sort(querySort);
-            } else {
-                mongooseQueries = mongooseQueries.sort("-createdAt");
-
-            }
-
-            // field limiting
-            if (req.query.fields) {
-                const fields = req.query.fields.split(",").join(" ");
-                mongooseQueries = mongooseQueries.select(fields);
-            } else {
-                mongooseQueries = mongooseQueries.select("-__v");
-            }
-
-            // search
-            if (req.query.search) {
-                const query = {};
-                query.$or = [
-                    { title: { $regex: req.query.search, $options: 'i' } },
-                    { description: { $regex: req.query.search, $options: 'i' } }
-                ],
-                    mongooseQueries = mongooseQueries.find(query);
-                // console.log(query); // { '$or': [ { title: [Object] }, { description: [Object] } ] }
-            }
-
-            // Execute the query
-            const user = await mongooseQueries;
-
-            res.status(200).json({ result: user.length, pagination, user: user });
+            res.status(200).json({ user: users });
         } catch (error) {
             return next(error);
         }
