@@ -192,7 +192,7 @@ const index = () => {
                                                             />
                                                         </div>
                                                         <div>
-                                                            <p className="font-semibold">{user.firstName + user.lastName}</p>
+                                                            <p className="font-semibold">{user.firstName + " " + user.lastName}</p>
                                                             <p className="text-xs text-gray-600 dark:text-gray-400">
                                                                 {user.email}
                                                             </p>
