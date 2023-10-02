@@ -1,12 +1,12 @@
-import { Result } from 'antd';
-import Link from 'next/link';
-const index = () => (
-  <Result
-    status="404"
-    title="404"
-    subTitle="Sorry, the page you visited does not exist."
-    extra={<Link href="/" type="primary">Back Home</Link>}
-  />
-);
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 
-export default index;
+export default function index() {
+  const router = useRouter()
+  
+  useEffect(() => {
+    router.replace("/dashboard")
+  })
+
+  return null
+}

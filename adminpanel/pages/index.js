@@ -9,30 +9,16 @@ import { setUser } from '@/store/UserSlice';
 import { Checkbox, Label, TextInput } from 'flowbite-react';
 import { HiMail, HiLockClosed } from 'react-icons/hi';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-
-
+import Link from 'next/link';
 
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 
 const erroMessage = "use lowercase, uppercase and digits";
 
-
-
-
 export default function Home() {
-
 
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const isloggedIn = useSelector(state => state.auth.user.auth);
-  if (isloggedIn) {
-    router.push('/dashboard');
-  }
-
-
-
 
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -45,8 +31,7 @@ export default function Home() {
     validationSchema: Yup.object().shape({
       email: Yup.string().email().required('email is required'),
       password: Yup.string().min(8).max(25).matches(passwordPattern, { message: erroMessage }).required('password is required')
-    }),
-
+    })
   })
 
   // password hide show
@@ -61,6 +46,7 @@ export default function Home() {
       email: values.email,
       password: values.password
     }
+
     const response = await adminLogin(data);
     if (response.status === 200) {
       const user = {
@@ -155,12 +141,12 @@ export default function Home() {
                 </div>
 
                 <div className="flex items-center justify-end">
-                  <a
-                    href="#"
+                  <Link
+                    href="/forgetPassword"
                     className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
                 {loading ? <button
                   type="submit"

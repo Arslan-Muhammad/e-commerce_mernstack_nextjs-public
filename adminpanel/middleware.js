@@ -1,18 +1,33 @@
 import { NextResponse } from "next/server";
 
-export default function (request) {
+export default function middleware(request) {
 
+    const loggingPath = request.nextUrl.pathname === "/";
     const verify = request.cookies.get('accessToken');
-    // const verify = ''
 
-    if (!verify) {
-        return NextResponse.redirect(new URL('/', request.url))
+    if (request.nextUrl.pathname === "/forgetPassword" && !verify) {
+        return;
+    } else {
+        if (request.nextUrl.pathname === "/forgetPassword" && verify) {
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+        }
     }
 
+    if (loggingPath) {
+        if (verify) {
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+        }
+    } else {
+        if (!verify) {
+            return NextResponse.redirect(new URL('/', request.url));
+        }
+    }
 }
 
 export const config = {
     matcher: [
+        "/",
+        "/forgetPassword",
         "/dashboard",
         "/products/:path*",
         "/category/:path*",
