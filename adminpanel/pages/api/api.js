@@ -264,3 +264,13 @@ export const getBrandById = async (id) => {
     }
     return response;
 }
+
+export const forgetPassword = async (email) => {
+    let response;
+    try {
+        response = await api.post(`/api/forget-password-token`, email);
+    } catch (error) {
+        return error;
+    }
+    return response;
+}
