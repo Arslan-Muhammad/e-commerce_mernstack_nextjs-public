@@ -1,6 +1,6 @@
 import { forgetPassword } from '../pages/api/api';
 import { toast } from 'react-toastify';
-import { Checkbox, Label, TextInput } from 'flowbite-react';
+import { Label, TextInput } from 'flowbite-react';
 import { HiMail } from 'react-icons/hi';
 import { useState } from 'react';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ const ForgetPassword = () => {
     const resetPasswordhanlder = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const response = await forgetPassword(email);
+        const response = await forgetPassword({email});
         if (response.status === 200) {
             setLoading(false)
             toast.success(response.data.message)
