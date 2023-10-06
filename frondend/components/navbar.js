@@ -6,29 +6,27 @@ const Navbar = () => {
 
     const cartItem = useSelector((state) => state.cart.cart)
     return (
-        <header className="bg-white">
-            <div className="container mx-auto px-4 py-8 flex items-center">
+        <header className="bg-gray-800">
+            <div className="container mx-auto px-16 py-3 flex items-center text-white">
                 {/* logo */}
                 <Link href="/products">
                     <div className="mr-auto md:w-48 flex-shrink-0">
                         <img
                             className="h-8 md:h-10"
-                            src="https://i.ibb.co/98pHdFq/2021-10-27-15h51-15.png"
+                            src="https://www.kelkoogroup.com/wp-content/uploads/2021/04/shopping-api_colour_line.png"
                             alt=""
                         />
                     </div>
                 </Link>
                 {/* search */}
-                <div className="w-full max-w-xs xl:max-w-lg 2xl:max-w-2xl bg-gray-100 rounded-md hidden xl:flex items-center">
+                <div className="w-full max-w-xs md:max-w-xl text-black bg-gray-100 rounded-md hidden md:flex items-center">
                     <select
-                        className="bg-transparent uppercase font-bold text-sm p-4 mr-4"
-                        name=""
-                        id=""
+                        className="bg-transparent uppercase rounded-l-md ring-0 border-none focus:ring-0 font-bold text-sm p-4 mr-4 hover:cursor-pointer"
                     >
-                        <option>all categories</option>
+                        <option className='h-2'>all categories</option>
                     </select>
                     <input
-                        className="border-l border-gray-300 bg-transparent font-semibold text-sm pl-4"
+                        className="border-l border-gray-300 bg-transparent font-semibold text-sm pl-4 w-full rounded-md"
                         type="text"
                         placeholder="I'm searching for ..."
                     />
@@ -50,7 +48,7 @@ const Navbar = () => {
                 </div>
                 {/* phone number */}
                 <div className="ml-auto md:w-48 hidden sm:flex flex-col place-items-end">
-                    <span className="font-bold md:text-xl">8 800 332 65-66</span>
+                    <span className="font-bold md:text-xl">+92301-123456899</span>
                     <span className="font-semibold text-sm text-gray-400">Support 24/7</span>
                 </div>
                 {/* buttons */}
@@ -77,7 +75,7 @@ const Navbar = () => {
                         </li>
                         <li className="ml-2 lg:ml-4 relative inline-block">
                             <a className="" href="">
-                                <div className="absolute -top-1 right-0 z-10 bg-yellow-400 text-xs font-bold px-1 py-0.5 rounded-sm">
+                                <div className="absolute -top-1 right-0 z-10 bg-lime-400 text-xs font-bold px-1 py-0.5 rounded-sm">
                                     3
                                 </div>
                                 <svg
@@ -99,7 +97,7 @@ const Navbar = () => {
                         </li>
                         <li className="ml-2 lg:ml-4 relative inline-block">
                             <Link className="" href="/cart">
-                                <div className="absolute -top-1 right-0 z-10 bg-yellow-400 text-xs font-bold px-1 py-0.5 rounded-sm">
+                                <div className="absolute -top-1 right-0 z-10 bg-lime-400 text-xs font-bold px-1 py-0.5 rounded-sm">
                                     {cartItem.length}
                                 </div>
                                 <svg

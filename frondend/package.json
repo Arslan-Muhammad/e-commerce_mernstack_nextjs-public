@@ -11,6 +11,8 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.6",
     "axios": "^1.5.1",
+    "flowbite": "^1.8.1",
+    "flowbite-react": "^0.6.4",
     "formik": "^2.4.5",
     "next": "latest",
     "next-redux-wrapper": "^8.1.0",
