@@ -13,6 +13,14 @@ export default function middleware(request) {
         }
     }
 
+    if (request.nextUrl.pathname === "/resetPassword" && !verify) {
+        return;
+    } else {
+        if (request.nextUrl.pathname === "/resetPassword" && verify) {
+            return NextResponse.redirect(new URL('/dashboard', request.url));
+        }
+    }
+
     if (loggingPath) {
         if (verify) {
             return NextResponse.redirect(new URL('/dashboard', request.url));
@@ -28,6 +36,7 @@ export const config = {
     matcher: [
         "/",
         "/forgetPassword",
+        "/resetPassword",
         "/dashboard",
         "/products/:path*",
         "/category/:path*",

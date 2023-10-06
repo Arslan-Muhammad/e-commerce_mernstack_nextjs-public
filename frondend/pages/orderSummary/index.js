@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useFormik } from "formik";
 
@@ -8,8 +8,11 @@ const CheckOut = () => {
     const userId = useSelector(state => state.user.user);
     console.log(userId);
   const itemInCart = useSelector((state) => state.cart.cart);
-  const [shipping, setShipping] = useState('Others');
+  const [shipping, setShipping] = useState('');
 
+  useEffect(() =>{
+    setShipping('others');
+  }, [shipping])
   const changeHandler = (e) => {
     e.preventDefault();
 

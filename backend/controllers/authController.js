@@ -318,9 +318,9 @@ const authController = {
             const token = crypto.randomBytes(32).toString('hex');
             const passwordResetToken = crypto.createHash('sha256').update(token).digest("hex");
 
-            const passwordResetExpires = Date.now() + 30 * 60 * 60 * 1000;
+            const passwordResetExpires = Date.now() + 5 * 60 * 1000;
 
-            const resetURL = `${BASE_URL}/api/reset-password?token=${passwordResetToken}&id=${user._id}`;
+            const resetURL = `http://localhost:3000/resetPassword?token=${passwordResetToken}&id=${user._id}`;
 
             await resetPassword.create({ passwordResetToken, passwordResetExpires, userId: user._id });
 
@@ -355,6 +355,7 @@ const authController = {
         }
         try {
             const { token, id } = req.query;
+            console.log(req.query, 'query----->>>')
             const { password } = req.body;
 
             const user = await User.findOne({ _id: id });
@@ -365,9 +366,6 @@ const authController = {
                 }
                 return next(error);
             }
-
-
-            console.log(token);
 
             const verifedToken = await resetPassword.findOne({
                 passwordResetToken: token,
@@ -381,13 +379,11 @@ const authController = {
                 return next(error);
             }
 
-
             const hashedPassword = await bcrypt.hash(password, Number(SALT_NO));
 
             await User.findByIdAndUpdate({ _id: id }, { password: hashedPassword });
 
-
-            await resetPassword.deleteOne({ userId: id });
+            await resetPassword.findOneAndDelete({ userId: id });
 
             res.status(200).json({ message: 'Password reset successfully' })
 

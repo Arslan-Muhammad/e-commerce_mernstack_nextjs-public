@@ -19,7 +19,7 @@ function App({ Component, pageProps }) {
   const loading = useAutoLogin();
   const router = useRouter();
 
-  const showNavbar = (router.pathname === '/' || router.pathname === '/forgetPassword') ? false : true;
+  const showNavbar = (router.pathname === '/' || router.pathname === '/forgetPassword' ||  router.pathname === '/resetPassword') ? false : true;
 
   return loading ? <Loading /> : (
     <>

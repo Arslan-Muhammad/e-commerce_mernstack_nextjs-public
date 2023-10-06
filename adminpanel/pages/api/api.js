@@ -274,3 +274,13 @@ export const forgetPassword = async (email) => {
     }
     return response;
 }
+
+export const resetPasswordReq = async (data, token, id) => {
+    let response;
+    try {
+        response = await api.put(`/api/reset-password?token=${token}&id=${id}`, data);
+    } catch (error) {
+        return error;
+    }
+    return response;
+}
