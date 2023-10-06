@@ -6,7 +6,7 @@ const Navbar = () => {
 
     const cartItem = useSelector((state) => state.cart.cart)
     return (
-        <header className="bg-gray-800">
+        <header className="bg-gray-800 sticky top-0 z-10">
             <div className="container mx-auto px-16 py-3 flex items-center text-white">
                 {/* logo */}
                 <Link href="/products">
@@ -23,6 +23,12 @@ const Navbar = () => {
                     <select
                         className="bg-transparent uppercase rounded-l-md ring-0 border-none focus:ring-0 font-bold text-sm p-4 mr-4 hover:cursor-pointer"
                     >
+                        <option selected className='h-2'>all categories</option>
+                        <option className='h-2'>all categories</option>
+                        <option className='h-2'>all categories</option>
+                        <option className='h-2'>all categories</option>
+                        <option className='h-2'>all categories</option><option className='h-2'>all categories</option>
+                        <option className='h-2'>all categories</option>
                         <option className='h-2'>all categories</option>
                     </select>
                     <input

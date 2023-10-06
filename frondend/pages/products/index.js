@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAllProducts } from '../api/api';
 import { ADD_TO_CART } from '@/store/cartSlice';
 import { useDispatch } from 'react-redux';
+import { BiHeart, BiCart } from "react-icons/bi"
 
 const index = ({ data }) => {
 
@@ -21,82 +22,44 @@ const index = ({ data }) => {
             All Products
           </h2>
         </div>
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-4 sm:gap-4 lg:mt-6">
+        <div className="mt-6 grid grid-cols-1 gap-2 md:grid-cols-4 lg:grid-cols-6 md:gap-1 lg:mt-6">
           {
             products?.map((product) => {
               return (
-                <div key={product._id} className="group my-10 flex w-full max-w-xs flex-col overflow-hidden duration-200 hover:-translate-y-4 rounded-lg border border-gray-100 bg-white shadow-md">
-                  <Link
-                    className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
-                    href={`/products/${product._id}`}
-                  >
-                    <img
-                      className="peer absolute top-0 right-0 h-full w-full object-cover"
-                      src={product.images[0].url}
-                      alt="product image"
-                    />
-                    <img
-                      className="peer absolute top-0 -right-96 h-full w-full object-cover transition-all delay-100 duration-1000 hover:right-0 peer-hover:right-0"
-                      src={product.images[0].url}
-                      alt="product image"
-                    />
-                    {/* <div class="absolute  bottom-0 mb-4 flex space-x-4 w-full justify-center">
-          <div class="rounded-full h-3 w-3 bg-gray-200 border-2 border-white"></div>
-          <div class="rounded-full h-3 w-3 bg-gray-200 border-2 border-white"></div>
-          <div class="rounded-full h-3 w-3 bg-gray-200 border-2 border-white"></div>
-        </div> */}
-                    <svg
-                      className="pointer-events-none absolute inset-x-0 bottom-5 mx-auto text-3xl text-white  transition-opacity group-hover:animate-ping group-hover:opacity-30 peer-hover:opacity-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                      role="img"
-                      width="1em"
-                      height="1em"
-                      preserveAspectRatio="xMidYMid meet"
-                      viewBox="0 0 32 32"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M2 10a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v10a4 4 0 0 1-2.328 3.635a2.996 2.996 0 0 0-.55-.756l-8-8A3 3 0 0 0 14 17v7H6a4 4 0 0 1-4-4V10Zm14 19a1 1 0 0 0 1.8.6l2.7-3.6H25a1 1 0 0 0 .707-1.707l-8-8A1 1 0 0 0 16 17v12Z"
-                      />
-                    </svg>
-                    <span className="absolute top-0 left-0 m-2 rounded-full bg-black px-2 text-center text-sm font-medium text-white">{product.discountPercentage}% OFF</span>
-                  </Link>
-                  <div className="mt-4 px-5 pb-5">
-                    <Link href={`/products/${product._id}`}>
-                      <h5 className="text-xl tracking-tight text-slate-900 hover:text-black">
-                        {product.title}
-                      </h5>
-
-                      <div className="mt-2 mb-5 flex items-center justify-between">
-                        <p>
-                          <span className="text-3xl font-bold text-slate-900">{product.price}</span>
-                          <span className="text-sm text-slate-900 line-through">{product.price}</span>
-                        </p>
-                      </div>
-                    </Link>
-                    <button
-                      onClick={() => addToCartHandler(product)}
-                      className="flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="mr-2 h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                      </svg>
-                      Add to cart
-                    </button>
+                <article className="relative rounded-md bg-white p-3 border hover:shadow-xl" key={product._id}>
+                  <div className="absolute top-3 right-3 z-10">
                   </div>
-                </div>
+                  <a href="#">
+                    <div className="relative flex items-end overflow-hidden rounded-md">
+                      <img src={product.images[0].url} alt="pic" />
+                      <div className="absolute top-2 right-2 inline-flex items-center rounded-md bg-white p-1 shadow-md">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3 text-yellow-400"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className="text-slate-400 ml-1 text-sm">4.9</span>
+                      </div>
+                    </div>
+                    <div className="mt-1 p-2">
+                      <h2 className="text-slate-700 truncate">{product.title}</h2>
+                      <p className="text-slate-400 mt-1 text-sm">{product.brand}</p>
+                      <div className="mt-3 flex items-end justify-between">
+                        <p>
+                          <span className="text-lg font-bold text-blue-500">${product.price}</span>
+                        </p>
+                        <div className="group inline-flex rounded-md bg-blue-100 p-2 gap-3 ">
+                          <button className='hover:bg-lime-500 rounded-md shadow-sm'><BiHeart size={20} /> </button>
+                          <div className="h-[20px]  bg-lime-300 w-[2px]"></div>
+                          <button onClick={() => addToCartHandler(product)} className='hover:bg-lime-500 rounded-md shadow-sm' ><BiCart size={20} /></button>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </article>
               )
             })
           }
