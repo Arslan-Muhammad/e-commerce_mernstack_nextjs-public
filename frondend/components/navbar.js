@@ -9,7 +9,7 @@ const Navbar = () => {
         <header className="bg-gray-800 sticky top-0 z-10">
             <div className="container mx-auto px-16 py-3 flex items-center text-white">
                 {/* logo */}
-                <Link href="/products">
+                <Link href="/">
                     <div className="mr-auto md:w-48 flex-shrink-0">
                         <img
                             className="h-8 md:h-10"
@@ -52,10 +52,10 @@ const Navbar = () => {
                         />
                     </svg>
                 </div>
-                {/* phone number */}
-                <div className="ml-auto md:w-48 hidden sm:flex flex-col place-items-end">
-                    <span className="font-bold md:text-xl">+92301-123456899</span>
-                    <span className="font-semibold text-sm text-gray-400">Support 24/7</span>
+                <div className='flex flex-row items-center justify-center gap-2 ml-6'>
+                    <Link href="/login" className='text-lg hover:underline'>Login</Link>
+                    <div className="h-[20px]  bg-gray-200 w-[2px]"></div>
+                    <Link href="/signup" className='text-lg hover:underline'>Register</Link>                     
                 </div>
                 {/* buttons */}
                 <nav className="contents">

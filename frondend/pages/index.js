@@ -27,6 +27,7 @@ export default function Home({ data }) {
   }
   return (
     <main>
+      <div className='w-full mx-auto'>
       <div className="grid grid-cols-6 grid-rows-4 gap-2 mx-16 my-2">
         <div className="col-span-4 row-span-4 rounded-md">
           <Carousel autoplay>
@@ -44,18 +45,19 @@ export default function Home({ data }) {
             </div>
           </Carousel>
         </div>
-        <div className="col-span-2 row-span-2 col-start-5">
+        <div className="col-span-2 row-span-2 col-start-5 bg-red-300">
           <img
             src="https://tecdn.b-cdn.net/img/new/standard/city/041.webp"
-            class="h-auto max-w-sm rounded-lg shadow-none transition-shadow duration-300 ease-in-out hover:shadow-lg hover:shadow-black/30"
+            class="h-auto rounded-lg shadow-none transition-shadow duration-300 ease-in-out hover:shadow-lg hover:shadow-black/30"
             alt="" />
         </div>
-        <div className="col-span-2 row-span-2 col-start-5 row-start-3">
+        <div className="col-span-2 row-span-2 col-start-5 row-start-3 bg-red-300">
           <img
             src="https://tecdn.b-cdn.net/img/new/standard/city/041.webp"
-            class="h-auto max-w-sm rounded-lg shadow-none transition-shadow duration-300 ease-in-out hover:shadow-lg hover:shadow-black/30"
+            class="h-auto rounded-lg shadow-none transition-shadow duration-300 ease-in-out hover:shadow-lg hover:shadow-black/30"
             alt="" />
         </div>
+      </div>
       </div>
       <section className="bg-white py-12 text-gray-700 sm:py-16 lg:py-10">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
@@ -76,7 +78,7 @@ export default function Home({ data }) {
                   <article className="relative rounded-md bg-white p-3 border hover:shadow-xl" key={product._id}>
                     <div className="absolute top-3 right-3 z-10">
                     </div>
-                    <a href="#">
+                    <div>
                       <div className="relative flex items-end overflow-hidden rounded-md">
                         <img src={product.images[0].url} alt="pic" />
                         <div className="absolute top-2 right-2 inline-flex items-center rounded-md bg-white p-1 shadow-md">
@@ -101,11 +103,11 @@ export default function Home({ data }) {
                           <div className="group inline-flex rounded-md bg-blue-100 p-2 gap-3 ">
                             <button className='hover:bg-lime-500 rounded-md shadow-sm'><BiHeart size={20} /> </button>
                             <div className="h-[20px]  bg-lime-300 w-[2px]"></div>
-                            <button onClick={() => addToCartHandler(product)} className='hover:bg-lime-500 rounded-md shadow-sm' ><BiCart size={20} /></button>
+                            <Link href={`/products/${product._id}`} className='hover:bg-lime-500 rounded-md shadow-sm' ><BiCart size={20} /></Link>
                           </div>
                         </div>
                       </div>
-                    </a>
+                    </div>
                   </article>
                 )
               })
@@ -133,7 +135,7 @@ export default function Home({ data }) {
                   <article className="relative rounded-md bg-white p-3 border hover:shadow-xl" key={product._id}>
                     <div className="absolute top-3 right-3 z-10">
                     </div>
-                    <a href="#">
+                    <div>
                       <div className="relative flex items-end overflow-hidden rounded-md">
                         <img src={product.images[0].url} alt="pic" />
                         <div className="absolute top-2 right-2 inline-flex items-center rounded-md bg-white p-1 shadow-md">
@@ -162,7 +164,7 @@ export default function Home({ data }) {
                           </div>
                         </div>
                       </div>
-                    </a>
+                    </div>
                   </article>
                 )
               })

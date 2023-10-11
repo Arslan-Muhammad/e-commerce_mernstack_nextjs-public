@@ -12,7 +12,7 @@ function useAutoLogin() {
     (async function autoLoginApiCall() {
       try {
         const response = await axios.get(
-            "http://localhost:8000/refresh",
+            "http://localhost:8000/api/refresh",
           {
             withCredentials: true,
           }
@@ -23,9 +23,7 @@ function useAutoLogin() {
           const user = {
             _id: response.data.user._id,
             email: response.data.user.email,
-            name: response.data.user.name,
             auth: response.data.auth,
-            message: response.data.message
           };
 
           dispatch(setUser(user));

@@ -28,3 +28,24 @@ export const getProductById = async (id) => {
     }
     return response;
 }
+
+export const cartUser = async (data) => {
+    let response;
+    try {
+        response = await api.post('/api/cart', data)
+    } catch (error) {
+        return error;
+    }
+    return response;
+}
+
+
+export const login = async (data) => {
+    let response;
+    try {
+        response = await api.post('/api/login', data)
+    } catch (error) {
+        return error;
+    }
+    return response;
+}
