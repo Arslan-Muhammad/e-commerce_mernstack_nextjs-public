@@ -355,7 +355,6 @@ const authController = {
         }
         try {
             const { token, id } = req.query;
-            console.log(req.query, 'query----->>>')
             const { password } = req.body;
 
             const user = await User.findOne({ _id: id });

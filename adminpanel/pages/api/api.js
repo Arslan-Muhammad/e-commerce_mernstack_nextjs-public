@@ -284,3 +284,23 @@ export const resetPasswordReq = async (data, token, id) => {
     }
     return response;
 }
+
+export const getAllOrders = async () => {
+    let response;
+    try {
+        response = await api.get('/api/getallorders');
+    } catch (error) {
+        return error;
+    }
+    return response;
+}
+
+export const getOrderbyUserId = async (id) => {
+    let response;
+    try {
+        response = await api.get(`/api/getorderbyuser/${id}`);
+    } catch (error) {
+        return error;
+    }
+    return response;
+}

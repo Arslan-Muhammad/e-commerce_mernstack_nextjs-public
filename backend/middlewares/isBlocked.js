@@ -1,7 +1,6 @@
 const User = require("../models/user");
 
 const isBlocked = async (req, res, next) => {
-    console.log(req.user, 'isblocked-->>');
     try {
         const { email } = req.user;
         if (!email) {

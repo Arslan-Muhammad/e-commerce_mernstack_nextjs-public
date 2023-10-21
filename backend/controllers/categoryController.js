@@ -89,7 +89,7 @@ const categoryContoller = {
     async updateCategory(req, res, next) {
         try {
             const { id, title } = req.body;
-            console.log(title, id);
+            
             await Category.findByIdAndUpdate({ _id: id }, { title: title }, {new: true})
 
             res.status(200).json({ message: 'Category updated successfully' });

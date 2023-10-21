@@ -1,18 +1,15 @@
 import React from 'react';
-import Link from 'next/link';
 import { getAllProducts } from '../api/api';
-import { ADD_TO_CART } from '@/store/cartSlice';
-import { useDispatch } from 'react-redux';
 import { BiHeart, BiCart } from "react-icons/bi"
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const index = ({ data }) => {
 
   const products = data.products;
-  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const addToCartHandler = (item) => {
-    dispatch(ADD_TO_CART(item));
-  }
+
 
   return (
     <section className="bg-white py-12 text-gray-700 sm:py-16 lg:py-10">
@@ -54,7 +51,7 @@ const index = ({ data }) => {
                         <div className="group inline-flex rounded-md bg-blue-100 p-2 gap-3 ">
                           <button className='hover:bg-lime-500 rounded-md shadow-sm'><BiHeart size={20} /> </button>
                           <div className="h-[20px]  bg-lime-300 w-[2px]"></div>
-                          <button onClick={() => addToCartHandler(product)} className='hover:bg-lime-500 rounded-md shadow-sm' ><BiCart size={20} /></button>
+                          <Link href={`/products/${product._id}`} className='hover:bg-lime-500 rounded-md shadow-sm' ><BiCart size={20} /></Link>
                         </div>
                       </div>
                     </div>
@@ -75,7 +72,7 @@ export default index;
 
 
 export async function getServerSideProps() {
-  const response = await getAllProducts();
+  const response = await getAllProducts() || [];
 
   const products = await response.data;
 

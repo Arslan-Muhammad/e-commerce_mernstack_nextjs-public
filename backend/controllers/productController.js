@@ -14,6 +14,7 @@ const productController = {
     async createProduct(req, res, next) {
 
         const { title, description, price, quantity, images, brand, category, colors } = req.body;
+        
         try {
 
             const photos = [...images]

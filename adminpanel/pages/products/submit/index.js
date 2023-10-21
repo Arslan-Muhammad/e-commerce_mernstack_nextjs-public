@@ -58,10 +58,9 @@ const index = ({ data, data1, data2 }) => {
     const [previewTitle, setPreviewTitle] = useState('');
     const [fileList, setFileList] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [colors, setColors] = useState(['red']);
+    const [colors, setColors] = useState([]);
     const [category, setCategory] = useState("");
     const [brand, setBrand] = useState("");
-
 
     const { values, handleChange, resetForm } = useFormik({
         initialValues: {
@@ -73,8 +72,11 @@ const index = ({ data, data1, data2 }) => {
         }
     })
 
-    const colorSelectHandler = (value) => {
-        setColors(value);
+
+    // don't remove value its working on colorSelectHandler
+    const colorSelectHandler = (value, label) => {
+        setColors(label);
+        
     };
 
     const categorySelectHandler = (value) => {

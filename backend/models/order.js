@@ -5,12 +5,13 @@ const orderSchema = new mongoose.Schema(
   {
     products: [
       {
-        product: {
+        _id: {
           type: mongoose.SchemaTypes.ObjectId,
           ref: "Product",
         },
-        count: Number,
+        qty: Number,
         color: String,
+        totalPrice: Number
       },
     ],
     paymentIntent: {},
@@ -18,8 +19,8 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "Not Processed",
       enum: [
-        "Not Processed",
-        "Cash on Delivery",
+        "Payment Pending",
+        "Paid",
         "Processing",
         "Dispatched",
         "Cancelled",

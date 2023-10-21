@@ -63,8 +63,9 @@ const index = ({ data, data1, data2, data3 }) => {
         });
     }
 
-    const colorSelecthandler = (value) => {
-        setColors(value);
+    //  colorSelector is Working Don't tocuh it
+    const colorSelecthandler = (value, label) => {
+        setColors(label);
     };
 
     const categorySelectHandler = (value) => {

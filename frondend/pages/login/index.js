@@ -1,5 +1,5 @@
+
 import React from 'react';
-import Link from 'next/link';
 import { login } from '../api/api';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/store/userSlice';
@@ -12,7 +12,7 @@ const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 
 const erroMessage = "use lowercase, uppercase and digits";
 
-const index = () => {
+const Login = ({ toggle }) => {
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -28,122 +28,202 @@ const index = () => {
     })
 
   })
-  const loginHandler = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault()
     const data = {
       email: values.email,
       password: values.password
     }
     const response = await login(data);
-    if(response.status === 200) {
-      toast.success(response.data.messgae);
+    if (response.status === 200) {
       const user = {
         _id: response.data.user._id,
         email: response.data.user.email,
         auth: response.data.auth
       }
-      dispatch(setUser(user));
-      router.push('/');
+      dispatch(setUser(user))
+      toast.success(response.data.message)
+      toggle()
+    } else if (response.code === 'ERR_BAD_REQUEST') {
+      toast.error(response.response.data.message)
+      toast.error(response.response.data.error)
     }
+
   }
   return (
-    <div
-      className="bg-no-repeat bg-cover bg-center relative"
-      style={{
-        backgroundImage:
-          "url(https://i.imgur.com/BkxGS9k.gif)"
-      }}
-    >
-      <div className="absolute bg-gradient-to-b from-green-400 to-green-300 opacity-75 inset-0 z-0" />
-      <div className="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
-        <div className="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl  z-10 ">
-          {/* <div className="self-center hidden lg:flex flex-col  text-white ">
-        <img src="login-logo.gif" className="mb-3 w-96 rounded-md shadow-lg" />
-      </div> */}
-        </div>
-        <div className="flex justify-center self-center z-10">
-          <div className="p-12 bg-white mx-auto rounded-2xl w-100 bg-opacity-80 ">
-            <div className="mb-4">
-              <h3 className="font-semibold text-2xl text-gray-800">Sign In </h3>
-              <p className="text-gray-500">Please sign in to your account.</p>
-            </div>
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 tracking-wide">
-                  Email
-                </label>
-                <input
-                  name='email'
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter Your Email Address"
-                />
-                 {errors.email && touched.email ? <p className='text-red-500 text-sm'>{errors.email}</p> : undefined}
-              </div>
-              <div className="space-y-2">
-                <label className="mb-5 text-sm font-medium text-gray-700 tracking-wide">
-                  Password
-                </label>
-                <input
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-green-400"
-                  placeholder="Enter your password"
-                />
-                 {errors.password && touched.password ? <p className='text-red-500 text-sm'>{errors.password}</p> : undefined}
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember_me"
-                    name="remember_me"
-                    type="checkbox"
-                    className="h-4 w-4 bg-blue-500 focus:ring-blue-400 border-gray-300 rounded"
-                  />
-                  <label
-                    htmlFor="remember_me"
-                    className="ml-2 block text-sm text-gray-800"
-                  >
-                    Remember me
-                  </label>
-                </div>
-                <div className="text-sm">
-                  <a href="#" className="text-green-400 hover:text-green-500">
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
-              <div>
-                <button
-                  type="submit"
-                  onClick={loginHandler}
-                  className="w-full flex justify-center bg-green-400  hover:bg-green-500 text-gray-100 p-3  rounded-full tracking-wide font-semibold  shadow-lg cursor-pointer transition ease-in duration-500"
-                >
-                  Sign in
-                </button>
-              </div>
-            </div>
-            <div className="pt-5 text-center text-gray-400 text-xs">
 
-              <div className="text-sm">
-                <span>
-                  Don't have account?
+    <>
+      <div className="fixed z-10 left-0 top-0 w-[100%] h-[100%] overflow-auto bg-white bg-opacity-10">
+        <div className="bg-white absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] w-full max-w-sm  rounded-md">
+          {/* close dialog */}
+          <button onClick={toggle} className='absolute top-2 right-2 bg-red-600 h-6 w-6 hover:bg-red-800 rounded-md text-white'>
+            X
+          </button>
+          {/* component */}
+          <div className=" flex flex-col items-center justify-center">
+            <div className="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
+              <div className="font-medium self-center text-xl sm:text-2xl uppercase text-gray-800">
+                Login To Your Account
+              </div>
+              <button className="relative mt-2 border rounded-md py-2 text-sm text-gray-800 bg-gray-100 hover:bg-gray-200">
+                <span className="absolute left-0 top-0 flex items-center justify-center h-full w-10 text-blue-500">
+                  <i className="fab fa-facebook-f" />
                 </span>
-                <Link href="/signup" className="ml-2 text-green-400 hover:text-green-500">
-                  Sign up
-                </Link>
+                <span>Login with Facebook</span>
+              </button>
+              <div className="relative mt-6 h-px bg-gray-300">
+                <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
+                  <span className="bg-white px-4 text-xs text-gray-500 uppercase">
+                    Or Login With Email
+                  </span>
+                </div>
               </div>
+              <div className="mt-6">
+                <form onSubmit={handleLogin}>
+                  <div className="flex flex-col mb-2">
+                    <label
+                      htmlFor="email"
+                      className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
+                    >
+                      Email:
+                    </label>
+                    <div className="relative">
+                      <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                        <svg viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          fill="none"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="h-5 w-5">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12"
+                            cy="7"
+                            r="4"></circle>
+                        </svg>
+                      </div>
+                      <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="text-sm  sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border w-full py-2 focus:outline-none focus:border-blue-400"
+                        placeholder="Enter Email Address"
+                        style={errors.email && touched.email && { borderBlockColor: "red" }}
+                      />
+                    </div>
+                    {errors.email && touched.email ? <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                      {errors.email}
+                    </span> : undefined}
 
+                  </div>
+                  <div className="flex flex-col mb-6">
+                    <label
+                      htmlFor="password"
+                      className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
+                    >
+                      Password:
+                    </label>
+                    <div className="relative">
+                      <div className="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                        <span>
+                          <svg
+                            className="h-6 w-6"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          </svg>
+                        </span>
+                      </div>
+                      <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400"
+                        placeholder="Password"
+                        style={errors.password && touched.password && { borderBlockColor: "red" }}
+                      />
+                    </div>
+                    {errors.password && touched.password ? <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+                      {errors.password}
+                    </span> : undefined}
+                  </div>
+                  <div className="flex items-center mb-6 -mt-4">
+                    <div className="flex ml-auto">
+                      <a
+                        href="#"
+                        className="inline-flex text-xs sm:text-sm text-blue-500 hover:text-blue-700"
+                      >
+                        Forgot Your Password?
+                      </a>
+                    </div>
+                  </div>
+                  <div className="flex w-full">
+                    <button
+                      type="submit"
+                      className="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
+                    >
+                      <span className="mr-2 uppercase">Login</span>
+                      <span>
+                        <svg
+                          className="h-6 w-6"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div className="flex justify-center items-center mt-2">
+                <a
+                  href="#"
+                  target="_blank"
+                  className="inline-flex items-center font-bold text-blue-500 hover:text-blue-700 text-xs text-center"
+                >
+                  <span>
+                    <svg
+                      className="h-6 w-6"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                  </span>
+                  <span className="ml-2">You don't have an account?</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
+
 
   )
 }
 
-export default index
+export default Login
+

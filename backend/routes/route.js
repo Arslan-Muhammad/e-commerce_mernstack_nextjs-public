@@ -8,7 +8,7 @@ const { createBrand, getAllBrand, getBrand, updateBrand, deleteBrand } = require
 const { getOrders, getAllOrders, updateOrderStatus, createOrder } = require('../controllers/orderController');
 const { createColor, getColors, getColor, updateColor, deleteColor } = require('../controllers/colorController');
 const isBlocked = require('../middlewares/isBlocked');
-const { userCart } = require('../controllers/cartController');
+const {createAddress, getAddress, updateAddress} = require('../controllers/addressController')
 
 const router = express.Router();
 
@@ -67,15 +67,16 @@ router.get('/api/color/:id', getColor);
 router.put('/api/color/update', auth, isAdmin, isBlocked, updateColor);
 router.delete('/api/color/:id', auth, isAdmin, isBlocked, deleteColor);
 
-// @desc cartController routes
-router.post("/api/cart", auth, userCart);
+// @desc address routes
+router.post('/api/createAddress', auth, isBlocked, createAddress);
+router.get('/api/getAddress', auth,  getAddress);
+router.put('/api/updateAddress', auth, isBlocked, updateAddress);
 
 // @desc OrderController routes
-router.post("/api/cart/cash-order", auth, isBlocked, createOrder);
+router.post("/api/createOrder", auth, isBlocked, createOrder);
 router.get("/api/get-orders", auth, isBlocked, getOrders);
 router.get("/api/getallorders", auth, isAdmin, isBlocked, getAllOrders);
-router.post("/api/getorderbyuser/:id", auth, isAdmin, isBlocked, getAllOrders);
+router.get("/api/getorderbyuser/:id", auth, isAdmin, isBlocked, getAllOrders);
 router.put("/api/order/update-order/:id", auth, isAdmin, isBlocked, updateOrderStatus);
-
 
 module.exports = router;

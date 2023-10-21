@@ -28,42 +28,30 @@ export default function Home({ data }) {
   return (
     <main>
       <div className='w-full mx-auto'>
-      <div className="grid grid-cols-6 grid-rows-4 gap-2 mx-16 my-2">
-        <div className="col-span-4 row-span-4 rounded-md">
-          <Carousel autoplay>
-            <div>
-              <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&w=500&q=60" alt="slide1" className='rounded-md' style={contentStyle} />
-            </div>
-            <div>
-              <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGZvb2R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="slide2" className='rounded-md' style={contentStyle} />
-            </div>
-            <div>
-              <img src="https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGZvb2R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="slide2" className='rounded-md' style={contentStyle} />
-            </div>
-            <div>
-              <img src="https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGZvb2R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="slide2" className='rounded-md' style={contentStyle} />
-            </div>
-          </Carousel>
+        <div className="mx-16">
+          <div className="rounded-md">
+            <Carousel autoplay>
+              <div>
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&w=500&q=60" alt="slide1" className='rounded-md' style={contentStyle} />
+              </div>
+              <div>
+                <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGZvb2R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="slide2" className='rounded-md' style={contentStyle} />
+              </div>
+              <div>
+                <img src="https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGZvb2R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="slide2" className='rounded-md' style={contentStyle} />
+              </div>
+              <div>
+                <img src="https://images.unsplash.com/photo-1494859802809-d069c3b71a8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGZvb2R8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="slide2" className='rounded-md' style={contentStyle} />
+              </div>
+            </Carousel>
+          </div>
         </div>
-        <div className="col-span-2 row-span-2 col-start-5 bg-red-300">
-          <img
-            src="https://tecdn.b-cdn.net/img/new/standard/city/041.webp"
-            class="h-auto rounded-lg shadow-none transition-shadow duration-300 ease-in-out hover:shadow-lg hover:shadow-black/30"
-            alt="" />
-        </div>
-        <div className="col-span-2 row-span-2 col-start-5 row-start-3 bg-red-300">
-          <img
-            src="https://tecdn.b-cdn.net/img/new/standard/city/041.webp"
-            class="h-auto rounded-lg shadow-none transition-shadow duration-300 ease-in-out hover:shadow-lg hover:shadow-black/30"
-            alt="" />
-        </div>
-      </div>
       </div>
       <section className="bg-white py-12 text-gray-700 sm:py-16 lg:py-10">
         <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
           <div className='w-full py-2 border rounded-md flex flex-row justify-between'>
             <div className='font-serif text-2xl font-bold ml-4'>
-             FLASH SALE
+              FLASH SALE
             </div>
             <div>
               <Link href="/products" className='font-serif text-xl mr-4 flex text-center items-center hover:text-lime-500' >
@@ -124,7 +112,7 @@ export default function Home({ data }) {
             </div>
             <div>
               <Link href="/products" className='font-serif text-xl mr-4 flex text-center items-center hover:text-lime-500' >
-               SHOP MORE <AiOutlineArrowRight size={20} />
+                SHOP MORE <AiOutlineArrowRight size={20} />
               </Link>
             </div>
           </div>
@@ -180,7 +168,7 @@ export default function Home({ data }) {
 export async function getServerSideProps() {
   const response = await getAllProducts();
 
-  const products = await response.data;
+  const products = await response.data || [];
 
   return {
     props: {

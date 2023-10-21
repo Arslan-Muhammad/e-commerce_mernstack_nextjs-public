@@ -1,5 +1,5 @@
 const express = require('express');
-const { PORT, NODE_ENV } = require('./config/index');
+const { PORT } = require('./config/index');
 const db_connection = require('./database/connection');
 const router = require('./routes/route');
 const errorHandler = require('./middlewares/errorHandler');
@@ -14,7 +14,8 @@ const app = express();
 db_connection();
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }
 

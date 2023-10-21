@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 const isAdmin = async (req, res, next) => {
-    console.log(req.user);
+    
     try {
         const {email} = req.user;
         if(!email) {

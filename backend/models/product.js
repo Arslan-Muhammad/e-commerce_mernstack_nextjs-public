@@ -39,7 +39,16 @@ const productSchema = new Schema(
             default: 0,
             // select: false // field not show in res
         },
-        colors: [],
+        colors: [{
+            label: {
+                type: String,
+                required: true,
+            },
+            value: {
+                type: String,
+                required: true,
+            }
+        }],
     },
     { timestamps: true }
 );

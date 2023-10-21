@@ -35,6 +35,8 @@ export default function middleware(request) {
 export const config = {
     matcher: [
         "/",
+        "/orders/orderDetails/",
+        "/orders",
         "/forgetPassword",
         "/resetPassword",
         "/dashboard",
