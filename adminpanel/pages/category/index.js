@@ -1,72 +1,69 @@
-import { deleteCategory, getCategory } from '../api/api';
-import { toast } from 'react-toastify';
-import { ExclamationCircleFilled } from '@ant-design/icons';
-import { Modal } from 'antd';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import Link from 'next/link';
-import Head from 'next/head';
+import { deleteCategory, getCategory } from "../api/api";
+import { toast } from "react-toastify";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { Modal } from "antd";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import Link from "next/link";
+import Head from "next/head";
 
 const { confirm } = Modal;
 
 const index = ({ data }) => {
-
   const allCategoies = data.category;
 
   const router = useRouter();
 
   // search with multiple fields
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const multipleSearch = allCategoies.filter((product) =>
     Object.keys(product).some((parameter) =>
       product[parameter].toString().toLowerCase().includes(searchQuery)
     )
-  )
+  );
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = multipleSearch.slice(firstIndex, lastIndex)
+  const records = multipleSearch.slice(firstIndex, lastIndex);
   const npages = Math.ceil(allCategoies.length / recordsPerPage);
   const numbers = [...Array(npages + 1).keys()].slice(1);
 
   // for previous pages
   const prePage = () => {
     if (currentPage !== firstIndex) {
-      setCurrentPage(currentPage - 1)
+      setCurrentPage(currentPage - 1);
     }
-  }
+  };
 
   // for next pages
   const nextPage = () => {
     if (currentPage !== lastIndex) {
-      setCurrentPage(currentPage + 1)
+      setCurrentPage(currentPage + 1);
     }
-  }
+  };
 
   // for changed pages
   const changePage = async (id) => {
-    setCurrentPage(id)
-  }
-
-
+    setCurrentPage(id);
+  };
 
   // 1) delete product Confirm module
   const showDeleteConfirm = (id) => {
     confirm({
-      title: 'Are you sure delete this Category?',
+      title: "Are you sure delete this Category?",
       icon: <ExclamationCircleFilled />,
       content: "Are you sure delete this Category",
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk() {
         deleteCategoryHandler(id);
       },
       onCancel() {
-        console.log('Cancel');
+        console.log("Cancel");
       },
     });
   };
@@ -74,7 +71,7 @@ const index = ({ data }) => {
   //refresh Page on Delete Product
   const refreshData = () => {
     router.replace(router.asPath);
-  }
+  };
 
   // delete Product Handler
   const deleteCategoryHandler = async (id) => {
@@ -83,13 +80,10 @@ const index = ({ data }) => {
       refreshData();
       toast.success(res.data.message);
     }
-  }
-
-
+  };
 
   return (
-    <main className='p-4 sm:ml-64'>
-      
+    <main className="p-4 sm:ml-64">
       <Head>
         <title>Category</title>
         <meta charset="UTF-8" />
@@ -123,7 +117,7 @@ const index = ({ data }) => {
                 </div>
                 <input
                   type="text"
-                  name='search'
+                  name="search"
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                   placeholder="Search..."
@@ -167,7 +161,6 @@ const index = ({ data }) => {
             </thead>
             <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
               {records?.map((category) => {
-
                 const createdAt = category.createdAt;
                 const updatedAt = category.updatedAt;
 
@@ -178,7 +171,10 @@ const index = ({ data }) => {
                 const updatedAtTime = updatedAt.slice(11, 19);
 
                 return (
-                  <tr className="text-gray-700 dark:text-gray-400" key={category._id}>
+                  <tr
+                    className="text-gray-700 dark:text-gray-400"
+                    key={category._id}
+                  >
                     <td className="px-4 py-3">
                       <div className="flex items-center text-sm">
                         {/* Avatar with inset shadow */}
@@ -196,16 +192,21 @@ const index = ({ data }) => {
                         </div>
                         <div>
                           <p className="font-semibold">{category.title}</p>
-
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm">{createdAtTime + " " + createdAtDate}</td>
-                    <td className="px-4 py-3 text-sm">{updatedAtTime + " " + updatedAtDate}</td>
+                    <td className="px-4 py-3 text-sm">
+                      {createdAtTime + " " + createdAtDate}
+                    </td>
+                    <td className="px-4 py-3 text-sm">
+                      {updatedAtTime + " " + updatedAtDate}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-4 text-sm">
                         <button
-                          onClick={() => router.push(`category/update/${category._id}`)}
+                          onClick={() =>
+                            router.push(`category/update/${category._id}`)
+                          }
                           className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
                           aria-label="Edit"
                         >
@@ -239,13 +240,15 @@ const index = ({ data }) => {
                       </div>
                     </td>
                   </tr>
-                )
+                );
               })}
             </tbody>
           </table>
         </div>
         <div className="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800">
-          <span className="flex items-center col-span-3">Showing 1-5 of 100</span>
+          <span className="flex items-center col-span-3">
+            Showing 1-5 of 100
+          </span>
           <span className="col-span-2" />
           {/* Pagination */}
           <span className="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
@@ -270,19 +273,22 @@ const index = ({ data }) => {
                     </svg>
                   </button>
                 </li>
-                {
-                  numbers.map((n, i) => {
-                    return (
-                      <li key={i}>
-                        <button
-                          onClick={() => changePage(n)}
-                          className={` ${currentPage === n ? 'text-white bg-purple-600 border-purple-600 focus:outline-none focus:shadow-outline-purple' : ''} px-3 py-1  transition-colors duration-150  border border-r-0  rounded-md `}>
-                          {n}
-                        </button>
-                      </li>
-                    )
-                  })
-                }
+                {numbers.map((n, i) => {
+                  return (
+                    <li key={i}>
+                      <button
+                        onClick={() => changePage(n)}
+                        className={` ${
+                          currentPage === n
+                            ? "text-white bg-purple-600 border-purple-600 focus:outline-none focus:shadow-outline-purple"
+                            : ""
+                        } px-3 py-1  transition-colors duration-150  border border-r-0  rounded-md `}
+                      >
+                        {n}
+                      </button>
+                    </li>
+                  );
+                })}
 
                 <li>
                   <button
@@ -308,21 +314,19 @@ const index = ({ data }) => {
           </span>
         </div>
       </div>
-
     </main>
-  )
-}
+  );
+};
 
 export default index;
 
-
 export async function getStaticProps() {
   const res = await getCategory();
-  console.log(res, 'category');
+  console.log(res, "category");
   const category = await res.data;
   return {
     props: {
-      data: category
-    }
-  }
+      data: category,
+    },
+  };
 }

@@ -1,51 +1,54 @@
-
-import { adminLogin } from './api/api';
-import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import * as Yup from 'yup';
-import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { setUser } from '@/store/UserSlice';
-import { Checkbox, Label, TextInput } from 'flowbite-react';
-import { HiMail, HiLockClosed } from 'react-icons/hi';
-import { useState } from 'react';
-import Link from 'next/link';
+import { adminLogin } from "./api/api";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/UserSlice";
+import { Checkbox, Label, TextInput } from "flowbite-react";
+import { HiMail, HiLockClosed } from "react-icons/hi";
+import { useState } from "react";
+import Link from "next/link";
 
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 
 const erroMessage = "use lowercase, uppercase and digits";
 
 export default function Home() {
-
   const dispatch = useDispatch();
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const { values, handleChange, handleBlur, touched, errors, resetForm } = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: Yup.object().shape({
-      email: Yup.string().email().required('email is required'),
-      password: Yup.string().min(8).max(25).matches(passwordPattern, { message: erroMessage }).required('password is required')
-    })
-  })
+  const { values, handleChange, handleBlur, touched, errors, resetForm } =
+    useFormik({
+      initialValues: {
+        email: "",
+        password: "",
+      },
+      validationSchema: Yup.object().shape({
+        email: Yup.string().email().required("email is required"),
+        password: Yup.string()
+          .min(8)
+          .max(25)
+          .matches(passwordPattern, { message: erroMessage })
+          .required("password is required"),
+      }),
+    });
 
   // password hide show
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
-  }
+  };
 
   const adminLoginHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
     const data = {
       email: values.email,
-      password: values.password
-    }
+      password: values.password,
+    };
 
     const response = await adminLogin(data);
     if (response.status === 200) {
@@ -55,20 +58,19 @@ export default function Home() {
         lastName: response.data.user.lastName,
         email: response.data.user.email,
         auth: response.data.auth,
-      }
+      };
       dispatch(setUser(user));
       toast.success(response.data.message);
-      setLoading(false)
-      router.push('/dashboard');
+      setLoading(false);
+      router.push("/dashboard");
       resetForm();
-    } else if (response.code === 'ERR_BAD_REQUEST') {
+    } else if (response.code === "ERR_BAD_REQUEST") {
       setLoading(false);
       toast.error(response.response.data.message);
       toast.error(response.response.data.error);
       values.password = "";
     }
-  }
-
+  };
 
   return (
     <main>
@@ -85,13 +87,13 @@ export default function Home() {
                   Admin Login
                 </h1>
               </div>
-              <form className="space-y-2 md:space-y-6" onSubmit={adminLoginHandler} >
+              <form
+                className="space-y-2 md:space-y-6"
+                onSubmit={adminLoginHandler}
+              >
                 <div className="max-w-md">
                   <div className="mb-2 block">
-                    <Label
-                      htmlFor="email"
-                      value="Your email"
-                    />
+                    <Label htmlFor="email" value="Your email" />
                   </div>
                   <TextInput
                     icon={HiMail}
@@ -101,16 +103,15 @@ export default function Home() {
                     value={values.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    name='email'
+                    name="email"
                   />
-                  {errors.email && touched.email ? <p className='text-red-500 text-sm'>{errors.email}</p> : undefined}
+                  {errors.email && touched.email ? (
+                    <p className="text-red-500 text-sm">{errors.email}</p>
+                  ) : undefined}
                 </div>
                 <div className="max-w-md">
                   <div className="mb-2 block">
-                    <Label
-                      htmlFor="password"
-                      value="Password"
-                    />
+                    <Label htmlFor="password" value="Password" />
                   </div>
                   <TextInput
                     icon={HiLockClosed}
@@ -120,22 +121,19 @@ export default function Home() {
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    name='password'
+                    name="password"
                   />
-                  {errors.password && touched.password ? <p className='text-red-500 text-sm'>{errors.password}</p> : undefined}
+                  {errors.password && touched.password ? (
+                    <p className="text-red-500 text-sm">{errors.password}</p>
+                  ) : undefined}
                   <div className="flex items-center gap-2 mt-2">
-                    <Checkbox id="show/hide"
+                    <Checkbox
+                      id="show/hide"
                       checked={isPasswordVisible}
                       onChange={togglePasswordVisibility}
                     />
-                    <Label
-                      htmlFor="show/hide"
-                      className='text-gray-500'
-                    >
-                      <p>
-                        Show Password
-                      </p>
-
+                    <Label htmlFor="show/hide" className="text-gray-500">
+                      <p>Show Password</p>
                     </Label>
                   </div>
                 </div>
@@ -148,23 +146,26 @@ export default function Home() {
                     Forgot password?
                   </Link>
                 </div>
-                {loading ? <button
-                  type="submit"
-                  className="w-full disabled cursor-wait text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
-                  Sign in...
-                </button> : <button
-                  type="submit"
-                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
-                  Sign in
-                </button>}
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="w-full disabled cursor-wait text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Sign in...
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  >
+                    Sign in
+                  </button>
+                )}
               </form>
             </div>
           </div>
         </div>
       </section>
-
     </main>
-  )
+  );
 }
