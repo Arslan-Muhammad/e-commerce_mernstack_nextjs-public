@@ -1,12 +1,12 @@
-import { useEffect } from "react"
-import { useRouter } from "next/router"
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function index() {
-  const router = useRouter()
-  
-  useEffect(() => {
-    router.replace("/dashboard")
-  })
+  const router = useRouter();
 
-  return null
+  useEffect(() => {
+    router.replace("/dashboard");
+  });
+
+  return null;
 }
